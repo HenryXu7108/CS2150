@@ -1,0 +1,57 @@
+C00A 000    jmp     start     skip around the variables
+0000 001 size     dw     0     int size
+0000 002 zero     dw     0
+0001 003 one     dw     1
+3000 004 loit     dw     3000    load
+0038 005 base    dw    0038    array base address
+4000 006 storeitdw    4000
+0000 007 counterdw    0    i
+0039 008 itr    dw    0039    itr
+0038 009 basecopydw    0038    array base address copy
+1000 00A start     readH         read array size
+4001 00B     store     size
+3003 00C     load    one    i=1
+4007 00D     store    i
+3001 00E loop    load    size    if(i>size) goto loop2
+6007 00F     sub    i
+E01E 010     jmpl     loop2
+B000 011
+3005 012     load    base    load array base address
+5003 013     add     one    base + one
+4005 014     store    base
+3005 015     load    base    load array base address
+5006 016     add         base + storeit(store at base address)
+4019 017     store    doit    store store command at 019
+1000 018     readH        read array[i]
+0000 019 doit    dw    0
+3007 01A     load    i    i += 1
+5003 01B     add    one
+4007 01C     store     i
+C00E 01D     jmp    loop    goto loop
+3005 01E loop2    load     base
+6008 01F     sub     itr    if (itr>base) goto loop3
+E02B 020      jmpl    loop3
+3008 021     load    itr
+5004 022    add    loit    itr + loit
+B000 023            space for change
+4025 024    store    doit    store the load command at 025
+0000 025 doit    dw    0
+1800 026    printH
+3003 027    load    one    itr +=1
+5008 028    add    itr
+4008 029    store    itr
+C01E 02A    jmp    loop2    goto loop2
+3005 02B loop3    load     base    get address of last array element
+6003 02C    sub    one    base - one
+4005 02D    store    base
+3005 02E    load    base
+6009 02F    sub    basecopyif(base < basecopy) goto halt
+E038 030    jmpl    halt
+3005 031    load    base
+5004 032     add    loit    base + loit
+5003 033    add     one    base + loit + one
+4035 034     store    doit    store the load command ar 035
+0000 035 doit    dw    0
+1800 036    printH
+C02B 037    jmp    loop3    goto loop3
+0000 038     halt    

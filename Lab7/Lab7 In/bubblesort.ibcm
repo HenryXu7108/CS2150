@@ -1,0 +1,105 @@
+C010 000    jmp     start     skip around the variables
+0001 001 one     dw     0
+0000 002 zero     dw     0
+0000 003 i     dw     0
+0009 004 j     dw     9
+0000 005 k     dw     0
+000A 006 size    dw    10    int size
+0000 007 temp    dw    0
+0070 008 base    dw    70    address of array base
+3000 009 loit    dw    3000    load
+4000 00A storeitdw    4000    store
+6000 00B subit    dw    6000    sub
+0000 00C x    dw    0    int x
+0000 00D            space for change
+0000 00E
+0000 00F
+3006 010 start    load    size    if(k>=size) goto loop2
+6005 011    sub    k
+E01E 012    jmpl    goto loop2
+D01E 013    jmpe    goto loop2
+300A 014    load    storeit
+5008 015    add     base
+5005 016    add    k
+4019 017    store    store the store command at 019
+1000 018    readH    read in A[k]
+0000 019 doit    dw    0
+3005 01A    load    k + one
+5001 01B    add    one
+4005 01C    store    k
+C010 01D    jmp    back to start
+3006 01E loop2  load    size
+6003 01F    sub     i    if(i>=size) goto loop3
+E05A 020    jmpl        goto loop3
+D05A 021    jmpe        goto loop3
+B004 022            space for change
+B003 023
+B05A 024
+B05A 025
+300B 026    load        subit
+5008 027    add    base    subit + base
+5004 028    add    j    subit + base + j (command of sub A[j-1])
+B000 029
+4031 02A    store    do1    store the sub command at 031
+3009 02B    load    loit
+5008 02C    add     base    loit + base
+5004 02D    add    j    loit + base + j
+6001 02E    sub     one    loit + base + j - 1(command of load A[j-1])
+4030 02F    store    do2    store the load command at 030
+0000 030 do2    load    A[j-1]
+0000 031 do1    sub    A[j]    if(A[j] >= A[j-1]) goto j--
+E04C 032    jmpl        goto i++
+D04C 033    jmpe        goto i++
+3009 034    load    loit
+5008 035    add    base    loit + base
+5004 036    add    j    loit + base + j
+4038 037    store        store the load command at 038
+0000 038 doit    load    A[j]
+4007 039    store    temp    temp = A[j]
+3009 03A    load    loit
+5008 03B    add    base
+5004 03C    add    j
+6001 03D    sub    one    loit + base + j - 1(command of load A[j-1])
+4043 03E    store    do1    store load A[j-1} at 043
+300A 03F    load    storeit
+5008 040    add     base
+5004 041    add    j    storeit + base + j(command of store A[j])
+4044 042    store    do2    store store A[j] at 044
+0000 043 do1    load    A[j-1]
+0000 044 do2    store    A[j]    A[j] = A[j-1]
+300A 045    load    storeit
+5008 046    add    base
+5004 047    add    j
+6001 048    sub    one    store + base +j - 1(command of store A[j-1])
+404B 049    store    do3    store store A[j-1] at 04B
+3007 04A    load    temp
+0000 04B do3    store    A[j-1]    A[j-1] = temp
+3004 04C j--    load     j    j--
+6001 04D     sub    one
+4004 04E     store    j
+3004 04F    load    j
+6002 050    sub    zero    if(j<0) goto i++
+E053 051    jmpl        goto i++
+C01E 052    jmp        goto loop2
+3003 053 i++    load    i    i++
+5001 054     sub    one
+4003 055     store    i
+3006 056    load     size
+6001 057    sub     one
+4004 058    store    j    j=9
+C01E 059     jmp        goto loop2
+3006 05A loop3    load    size
+600C 05B     sub    x    if(x>=size) goto xit
+E068 05C     jmpl        goto xit
+D068 05D     jmpe        goto xit
+3009 05E    load    loit
+5008 05F    add    base
+500C 060    add    x    loit + base + x (command of load A[x])
+4062 061    store    do4    store load A[x] at 062
+0000 062 do4    load    A[x]
+1800 063    printH
+300C 064    load    x    x++
+5001 065    add     one
+400C 066    store    x
+C05A 067    jmp        goto loop3
+0000 068 xit    halt

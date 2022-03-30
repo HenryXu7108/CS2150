@@ -1,0 +1,29 @@
+C007 000	jmp 	start 	skip around the variables
+0001 001 one	dw	1	
+0000 002 i	dw	0	int i	
+3000 003 loit	dw	3000	load	
+001C 004 length	dw	01C
+0002 005 ibase	dw	2
+0013 006 dobase	dw	13
+3004 007 start	load	length	if(i>=length) goto xit
+6002 008	sub	i	
+E019 009	jmpl		goto xit
+3005 00A	load	ibase
+6002 00B	sub	i	if(i = ibase) print 0000
+D01A 00C	jmpe		goto 0000
+3002 00D	load	i
+6006 00E	sub  	dobase 	if(i = dobase) print 0000
+D01A 00F	jmpe		goto 0000
+3003 010 	load 	loit 	
+5002 011 	add	i	loit + i (command of load 000i)	
+4013 012 	store		store the command at 013	
+0000 013 doit	load	000i	
+1800 014	printH 	
+3002 015 i++	load	i	
+5001 016	add	one   	
+4002 017 	store	i	
+C007 018 	jmp		goto start
+0000 019 xit	halt
+3019 01A 0000	load 	0000	
+1800 01B	printH
+C015 01C	jmp		goto i++
